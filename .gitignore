@@ -54,3 +54,6 @@ config.cfg
 # shader files
 *.tmp
 
+# notepad++ backup files
+*.bak
+
