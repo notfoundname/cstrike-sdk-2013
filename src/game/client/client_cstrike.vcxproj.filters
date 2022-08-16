@@ -1091,6 +1091,9 @@
     <ClInclude Include="weapons_resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="worldlight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="game_controls\buymenu.h">
       <Filter>Header Files\game_controls header files</Filter>
     </ClInclude>
@@ -3119,6 +3122,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorldDimsProxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="worldlight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\cstrike\achievements_cs.cpp">
