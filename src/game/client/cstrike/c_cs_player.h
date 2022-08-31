@@ -132,7 +132,7 @@ public:
 
 	virtual bool ShouldReceiveProjectedTextures( int flags )
 	{
-		return ( this != C_BasePlayer::GetLocalPlayer() );
+        return true;//( this != C_BasePlayer::GetLocalPlayer() );
 	}
 
 	void ClearSoundEvents()

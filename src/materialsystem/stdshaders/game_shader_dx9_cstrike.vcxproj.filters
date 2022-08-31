@@ -7,12 +7,6 @@
     <Filter Include="Link Libraries">
       <UniqueIdentifier>{C5D73B3A-C648-896C-B7CE-F174808E5BA5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader Source">
-      <UniqueIdentifier>{C6C1C1A8-80A2-218E-0AF8-94D8DDB5FAD8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader Source\fxc">
-      <UniqueIdentifier>{4D918305-7063-E4C2-0906-D415E5F14EA3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{BA03E055-4FA2-FCE3-8A1C-D348547D379C}</UniqueIdentifier>
     </Filter>
@@ -21,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Library Include="..\..\lib\public\discord-rpc.lib">
+      <Filter>Link Libraries</Filter>
+    </Library>
     <Library Include="..\..\lib\public\mathlib.lib">
       <Filter>Link Libraries</Filter>
     </Library>
@@ -86,24 +83,6 @@
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="stdshader_dx9_20b.txt">
-      <Filter>Shader Source</Filter>
-    </CustomBuild>
-    <CustomBuild Include="example_model_ps20b.fxc">
-      <Filter>Shader Source\fxc</Filter>
-    </CustomBuild>
-    <CustomBuild Include="example_model_vs20.fxc">
-      <Filter>Shader Source\fxc</Filter>
-    </CustomBuild>
-    <CustomBuild Include="SDK_Bloom_ps2x.fxc">
-      <Filter>Shader Source\fxc</Filter>
-    </CustomBuild>
-    <CustomBuild Include="SDK_bloomadd_ps2x.fxc">
-      <Filter>Shader Source\fxc</Filter>
-    </CustomBuild>
-    <CustomBuild Include="SDK_screenspaceeffect_vs20.fxc">
-      <Filter>Shader Source\fxc</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\..\public\tier0\pointeroverride.asm">
       <Filter>Source Files</Filter>
     </CustomBuild>
