@@ -1,18 +1,18 @@
 # cstrike-sdk-2013
 Counter-Strike: Source SDK based on leak(s) from 2018-2020 and original 2013 SDK.
-<br>
+
 TODO:
 - [ ] Rename to mod_cstrike without causing any problems;
 - [ ] Make custom shaders work;
 - [ ] Fix rare crashes;
 - [ ] Global light.
-<br>
+
 Used code from:
 - https://developer.valvesoftware.com/wiki/Env_projectedtexture/fixes
 - General https://developer.valvesoftware.com/wiki/General_SDK_Snippets_%26_Fixes
 - https://developer.valvesoftware.com/wiki/Implementing_Discord_RPC
 - https://developer.valvesoftware.com/wiki/Dynamic_RTT_shadow_angles_in_Source_2007
-<br>
+
 Source 1 SDK Licence:
 
 ```
