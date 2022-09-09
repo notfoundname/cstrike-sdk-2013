@@ -30,6 +30,8 @@
 #include "lzma/lzma.h"
 #endif
 
+#include "tier0/memdbgon.h"
+
 // Data descriptions for byte swapping - only needed
 // for structures that are written to file for use by the game.
 BEGIN_BYTESWAP_DATADESC( ZIP_EndOfCentralDirRecord )
@@ -656,8 +658,8 @@ void CZipFile::ParseFromBuffer( void *buffer, int bufferlength )
 			// Set any xzip configuration
 			if ( rec.commentLength )
 			{
-				char commentString[128];
-				int commentLength = min( rec.commentLength, sizeof( commentString ) );
+				char commentString[128] = { 0 };
+				int commentLength = min( (int)rec.commentLength, (int)sizeof( commentString ) );
 				buf.Get( commentString, commentLength );
 				if ( commentLength == sizeof( commentString ) )
 					--commentLength;
@@ -673,7 +675,7 @@ void CZipFile::ParseFromBuffer( void *buffer, int bufferlength )
 		}
 	}
 	Assert( bFoundEndOfCentralDirRecord );
-	
+
 	// Make sure there are some files to parse
 	int numzipfiles = rec.nCentralDirectoryEntries_Total;
 	if ( numzipfiles <= 0 )
@@ -702,7 +704,7 @@ void CZipFile::ParseFromBuffer( void *buffer, int bufferlength )
 			Warning( "Opening ZIP file with unsupported compression type\n");
 		}
 
-		char tmpString[1024] = { 0 };
+		char tmpString[MAX_PATH] = { 0 };
 		buf.Get( tmpString, Min( (unsigned int)zipFileHeader.fileNameLength, (unsigned int)sizeof( tmpString ) ) );
 		Q_strlower( tmpString );
 
@@ -813,8 +815,8 @@ HANDLE CZipFile::ParseFromDisk( const char *pFilename )
 			// Set any xzip configuration
 			if ( rec.commentLength )
 			{
-				char commentString[128];
-				int commentLength = min( rec.commentLength, sizeof( commentString ) );
+				char commentString[128] = { 0 };
+				int commentLength = min( (int)rec.commentLength, (int)sizeof( commentString ) );
 				CWin32File::FileRead( hFile, commentString, commentLength );
 				if ( commentLength == sizeof( commentString ) )
 					--commentLength;
@@ -870,9 +872,8 @@ HANDLE CZipFile::ParseFromDisk( const char *pFilename )
 			return NULL;
 		}
 
-		char fileName[1024];
-		zipDirBuff.Get( fileName, zipFileHeader.fileNameLength );
-		fileName[zipFileHeader.fileNameLength] = '\0';
+		char fileName[MAX_PATH] = { 0 };
+		zipDirBuff.Get( fileName, Min( (size_t)zipFileHeader.fileNameLength, sizeof( fileName ) - 1 ) );
 		Q_strlower( fileName );
 
 		// can determine actual filepos, assuming a well formed zip
@@ -1448,8 +1449,42 @@ void CZipFile::SaveToDisk( HANDLE hOutFile )
 //-----------------------------------------------------------------------------
 void CZipFile::SaveToBuffer( CUtlBuffer& buf )
 {
+	// Estimate size for buffer, since the linear growth of CUtlBuffer is a virtual memory steamroller. This is
+	// best-effort. Ideally CUtlBuffer's growth strategy would be sane and this would be unnecessary.
+	int sizeEstimate = 0;
+	for ( int i = m_Files.FirstInorder(); i != m_Files.InvalidIndex(); i = m_Files.NextInorder( i ) )
+	{
+		CZipEntry *e = &m_Files[i];
+		Assert( e );
+
+		int nameLen = V_strlen( e->m_Name.String() );
+		// Both the per-file header and central directory have these
+		sizeEstimate += 2 * sizeof( ZIP_LocalFileHeader );
+		sizeEstimate += 2 * nameLen;
+		sizeEstimate += 2 * CalculatePadding( nameLen, e->m_ZipOffset );
+		sizeEstimate += sizeof( ZIP_EndOfCentralDirRecord );
+		sizeEstimate += e->m_nCompressedSize;
+		// XZip comment string, max 128
+		sizeEstimate += 128;
+		// We align things to m_AlignmentSize at two points
+		sizeEstimate += m_AlignmentSize * 2;
+	}
+
+	int start = buf.TellPut();
+	buf.EnsureCapacity( start + sizeEstimate );
 	CBufferStream stream( buf );
+
 	SaveDirectory( stream );
+
+	int end = buf.TellPut();
+	if ( start + sizeEstimate < end )
+	{
+		Warning( "ZIP Output overshot buffer estimate: Estimated %i, actual %i\n", sizeEstimate, end - start );
+	}
+	else
+	{
+		DevMsg( "Wrote ZIP buffer, estimated size %i, actual size %i\n", sizeEstimate, end - start );
+	}
 }
 
 //-----------------------------------------------------------------------------

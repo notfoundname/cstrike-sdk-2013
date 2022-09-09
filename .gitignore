@@ -10,8 +10,14 @@
 *.exp
 *.ilk
 *.lastbuildstate
-vc100.pdb
-ipch
+# vc100.pdb
+# vc120.pdb
+# *.pdb
+# Release*
+# Debug*
+# *.vcxproj.*
+# *.vpc.sentinel
+# ipch
 *.sdf
 *.opensdf
 *.idb
@@ -49,11 +55,6 @@ server.dylib.dSYM/
 game_shader_dx9.pdb
 game_shader_dx9.dll
 game_shader_dx9.lib
-*.pdb
-Release*
-Debug*
-*.vcxproj.*
-*.vpc.sentinel
 
 game/bin/*
 

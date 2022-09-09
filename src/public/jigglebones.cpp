@@ -280,9 +280,12 @@ void CJiggleBones::BuildJiggleTransformations( int boneIndex, float currenttime,
 					{
 						float dT = 0.01f;
 						const float axisSize = 10.0f;
-						debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitLeft, 0, 255, 255, true, dT );
-						debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitUp, 255, 255, 0, true, dT );
-						debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitForward, 255, 0, 255, true, dT );
+						if ( debugoverlay )
+						{
+							debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitLeft, 0, 255, 255, true, dT );
+							debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitUp, 255, 255, 0, true, dT );
+							debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitForward, 255, 0, 255, true, dT );
+						}
 					}
 #endif // CLIENT_DLL
 
@@ -375,9 +378,12 @@ void CJiggleBones::BuildJiggleTransformations( int boneIndex, float currenttime,
 					{
 						float dT = 0.01f;
 						const float axisSize = 10.0f;
-						debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitLeft, 0, 255, 255, true, dT );
-						debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitUp, 255, 255, 0, true, dT );
-						debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitForward, 255, 0, 255, true, dT );
+						if ( debugoverlay )
+						{
+							debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitLeft, 0, 255, 255, true, dT );
+							debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitUp, 255, 255, 0, true, dT );
+							debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * limitForward, 255, 0, 255, true, dT );
+						}
 					}
 #endif // CLIENT_DLL
 
@@ -451,7 +457,10 @@ void CJiggleBones::BuildJiggleTransformations( int boneIndex, float currenttime,
 #ifdef CLIENT_DLL
 		if ( cl_jiggle_bone_debug.GetBool() )
 		{
-			debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + 10.0f * data->lastLeft, 255, 0, 255, true, 0.01f );
+			if ( debugoverlay )
+			{
+				debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + 10.0f * data->lastLeft, 255, 0, 255, true, 0.01f );
+			}
 		}
 #endif
 
@@ -574,7 +583,10 @@ void CJiggleBones::BuildJiggleTransformations( int boneIndex, float currenttime,
 #ifdef CLIENT_DLL
 		if ( cl_jiggle_bone_debug.GetBool() )
 		{
-			debugoverlay->AddLineOverlay( data->lastBoingPos, goalBasePosition, 0, 128, ( gpGlobals->framecount & 0x1 ) ? 0 : 200, true, 999.9f );
+			if ( debugoverlay )
+			{
+				debugoverlay->AddLineOverlay( data->lastBoingPos, goalBasePosition, 0, 128, ( gpGlobals->framecount & 0x1 ) ? 0 : 200, true, 999.9f );
+			}
 		}
 #endif
 
@@ -606,10 +618,13 @@ void CJiggleBones::BuildJiggleTransformations( int boneIndex, float currenttime,
 #ifdef CLIENT_DLL
 				if ( cl_jiggle_bone_debug.GetBool() )
 				{
-					debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + 5.0f * data->boingDir, 255, 255, 0, true, 999.9f );
-					debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + Vector( 0.1, 0, 0 ), 128, 128, 0, true, 999.9f );
-					debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + Vector( 0, 0.1, 0 ), 128, 128, 0, true, 999.9f );
-					debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + Vector( 0, 0, 0.1 ), 128, 128, 0, true, 999.9f );
+					if ( debugoverlay )
+					{
+						debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + 5.0f * data->boingDir, 255, 255, 0, true, 999.9f );
+						debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + Vector( 0.1, 0, 0 ), 128, 128, 0, true, 999.9f );
+						debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + Vector( 0, 0.1, 0 ), 128, 128, 0, true, 999.9f );
+						debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + Vector( 0, 0, 0.1 ), 128, 128, 0, true, 999.9f );
+					}
 				}
 #endif
 			}
@@ -731,9 +746,12 @@ void CJiggleBones::BuildJiggleTransformations( int boneIndex, float currenttime,
 			if ( cl_jiggle_bone_debug.GetBool() )
 			{
 				float dT = 0.01f;
-				debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + 50.0f * data->boingDir, 255, 255, 0, true, dT );
-				debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + 50.0f * boingSide, 255, 0, 255, true, dT );
-				debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + 50.0f * boingOtherSide, 0, 255, 255, true, dT );
+				if ( debugoverlay )
+				{
+					debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + 50.0f * data->boingDir, 255, 255, 0, true, dT );
+					debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + 50.0f * boingSide, 255, 0, 255, true, dT );
+					debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + 50.0f * boingOtherSide, 0, 255, 255, true, dT );
+				}
 			}
 #endif
 
@@ -754,9 +772,12 @@ void CJiggleBones::BuildJiggleTransformations( int boneIndex, float currenttime,
 	{
 		float dT = 0.01f;
 		const float axisSize = 5.0f;
-		debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * goalLeft, 255, 0, 0, true, dT );
-		debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * goalUp, 0, 255, 0, true, dT );
-		debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * goalForward, 0, 0, 255, true, dT );
+		if ( debugoverlay )
+		{
+			debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * goalLeft, 255, 0, 0, true, dT );
+			debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * goalUp, 0, 255, 0, true, dT );
+			debugoverlay->AddLineOverlay( goalBasePosition, goalBasePosition + axisSize * goalForward, 0, 0, 255, true, dT );
+		}
 
 		if ( cl_jiggle_bone_debug.GetInt() > 1 )
 		{
@@ -773,25 +794,31 @@ void CJiggleBones::BuildJiggleTransformations( int boneIndex, float currenttime,
 
 		if ( jiggleInfo->flags & ( JIGGLE_IS_FLEXIBLE | JIGGLE_IS_RIGID ) )
 		{
-			debugoverlay->AddLineOverlay( goalBasePosition, 
-				data->tipPos, 255, 255, 0, true, dT );
+			if ( debugoverlay )
+			{
+				debugoverlay->AddLineOverlay( goalBasePosition, 
+					data->tipPos, 255, 255, 0, true, dT );
 
-			debugoverlay->AddLineOverlay( data->tipPos + Vector( -sz, 0, 0 ), 
-				data->tipPos + Vector( sz, 0, 0 ), 0, 255, 255, true, dT );
-			debugoverlay->AddLineOverlay( data->tipPos + Vector( 0, -sz, 0 ), 
-				data->tipPos + Vector( 0, sz, 0 ), 0, 255, 255, true, dT );
-			debugoverlay->AddLineOverlay( data->tipPos + Vector( 0, 0, -sz ), 
-				data->tipPos + Vector( 0, 0, sz ), 0, 255, 255, true, dT );
+				debugoverlay->AddLineOverlay( data->tipPos + Vector( -sz, 0, 0 ), 
+					data->tipPos + Vector( sz, 0, 0 ), 0, 255, 255, true, dT );
+				debugoverlay->AddLineOverlay( data->tipPos + Vector( 0, -sz, 0 ), 
+					data->tipPos + Vector( 0, sz, 0 ), 0, 255, 255, true, dT );
+				debugoverlay->AddLineOverlay( data->tipPos + Vector( 0, 0, -sz ), 
+					data->tipPos + Vector( 0, 0, sz ), 0, 255, 255, true, dT );
+			}
 		}
 
 		if ( jiggleInfo->flags & JIGGLE_HAS_BASE_SPRING )
 		{
-			debugoverlay->AddLineOverlay( data->basePos + Vector( -sz, 0, 0 ), 
-				data->basePos + Vector( sz, 0, 0 ), 255, 0, 255, true, dT );
-			debugoverlay->AddLineOverlay( data->basePos + Vector( 0, -sz, 0 ), 
-				data->basePos + Vector( 0, sz, 0 ), 255, 0, 255, true, dT );
-			debugoverlay->AddLineOverlay( data->basePos + Vector( 0, 0, -sz ), 
-				data->basePos + Vector( 0, 0, sz ), 255, 0, 255, true, dT );
+			if ( debugoverlay )
+			{
+				debugoverlay->AddLineOverlay( data->basePos + Vector( -sz, 0, 0 ), 
+					data->basePos + Vector( sz, 0, 0 ), 255, 0, 255, true, dT );
+				debugoverlay->AddLineOverlay( data->basePos + Vector( 0, -sz, 0 ), 
+					data->basePos + Vector( 0, sz, 0 ), 255, 0, 255, true, dT );
+				debugoverlay->AddLineOverlay( data->basePos + Vector( 0, 0, -sz ), 
+					data->basePos + Vector( 0, 0, sz ), 255, 0, 255, true, dT );
+			}
 		}
 
 

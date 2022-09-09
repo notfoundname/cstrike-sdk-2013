@@ -50,6 +50,7 @@
 #include "cglmbuffer.h"
 #include "cglmquery.h"
 
+#include "tier0/tslist.h"
 #include "tier0/vprof_telemetry.h"
 #include "materialsystem/IShader.h"
 #include "dxabstract_types.h"
@@ -1382,7 +1383,7 @@ class GLMContext
 		FORCEINLINE void SetSamplerAddressU( int sampler, GLenum Value );
 		FORCEINLINE void SetSamplerAddressV( int sampler, GLenum Value );
 		FORCEINLINE void SetSamplerAddressW( int sampler, GLenum Value );
-		FORCEINLINE void SetSamplerStates( int sampler, GLenum AddressU, GLenum AddressV, GLenum AddressW, GLenum minFilter, GLenum magFilter, GLenum mipFilter );
+		FORCEINLINE void SetSamplerStates( int sampler, GLenum AddressU, GLenum AddressV, GLenum AddressW, GLenum minFilter, GLenum magFilter, GLenum mipFilter, int minLod, float lodBias );
 		FORCEINLINE void SetSamplerBorderColor( int sampler, DWORD Value );
 		FORCEINLINE void SetSamplerMipMapLODBias( int sampler, DWORD Value );
 		FORCEINLINE void SetSamplerMaxMipLevel( int sampler, DWORD Value );
@@ -1905,6 +1906,9 @@ class GLMContext
 		
 		CFlushDrawStatesStats m_FlushStats;
 #endif
+
+	void ProcessTextureDeletes();
+	CTSQueue<CGLMTex*> m_DeleteTextureQueue;
 };
 
 #ifndef OSX
@@ -2248,7 +2252,7 @@ FORCEINLINE void GLMContext::SetSamplerAddressW( int sampler, GLenum Value )
 	m_samplers[sampler].m_samp.m_packed.m_addressW = Value;
 }
 
-FORCEINLINE void GLMContext::SetSamplerStates( int sampler, GLenum AddressU, GLenum AddressV, GLenum AddressW, GLenum minFilter, GLenum magFilter, GLenum mipFilter )
+FORCEINLINE void GLMContext::SetSamplerStates( int sampler, GLenum AddressU, GLenum AddressV, GLenum AddressW, GLenum minFilter, GLenum magFilter, GLenum mipFilter, int minLod, float lodBias )
 {
 	Assert( AddressU < ( 1 << GLM_PACKED_SAMPLER_PARAMS_ADDRESS_BITS) );
 	Assert( AddressV < ( 1 << GLM_PACKED_SAMPLER_PARAMS_ADDRESS_BITS) );
@@ -2256,6 +2260,7 @@ FORCEINLINE void GLMContext::SetSamplerStates( int sampler, GLenum AddressU, GLe
 	Assert( minFilter < ( 1 << GLM_PACKED_SAMPLER_PARAMS_MIN_FILTER_BITS ) );
 	Assert( magFilter < ( 1 << GLM_PACKED_SAMPLER_PARAMS_MAG_FILTER_BITS ) );
 	Assert( mipFilter < ( 1 << GLM_PACKED_SAMPLER_PARAMS_MIP_FILTER_BITS ) );
+	Assert( minLod < ( 1 << GLM_PACKED_SAMPLER_PARAMS_MIN_LOD_BITS ) );
 
 	GLMTexSamplingParams &params = m_samplers[sampler].m_samp;
 	params.m_packed.m_addressU = AddressU;
@@ -2264,6 +2269,9 @@ FORCEINLINE void GLMContext::SetSamplerStates( int sampler, GLenum AddressU, GLe
 	params.m_packed.m_minFilter = minFilter;
 	params.m_packed.m_magFilter = magFilter;
 	params.m_packed.m_mipFilter = mipFilter;
+	params.m_packed.m_minLOD = minLod;
+
+	params.m_lodBias = lodBias;
 }
 
 FORCEINLINE void GLMContext::SetSamplerBorderColor( int sampler, DWORD Value )
@@ -2273,7 +2281,15 @@ FORCEINLINE void GLMContext::SetSamplerBorderColor( int sampler, DWORD Value )
 
 FORCEINLINE void GLMContext::SetSamplerMipMapLODBias( int sampler, DWORD Value )
 {
-	// not currently supported
+	typedef union {
+		DWORD asDword;
+		float asFloat;
+	} Convert_t;
+
+	Convert_t c;
+	c.asDword = Value;
+
+	m_samplers[sampler].m_samp.m_lodBias = c.asFloat;
 }
 
 FORCEINLINE void GLMContext::SetSamplerMaxMipLevel( int sampler, DWORD Value )

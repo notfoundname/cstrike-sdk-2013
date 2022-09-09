@@ -935,8 +935,12 @@ public:
 class CMemoryFileBacking : public CRefCounted<CRefCountServiceMT>
 {
 public:
+	// malloc and free in headers with our janky memdbg system. What could go wrong. Except everything.
+	// (this free can't skip memdbg if paired malloc used memdbg)
+#include <memdbgon.h>
 	CMemoryFileBacking( IFileSystem* pFS ) : m_pFS( pFS ), m_nRegistered( 0 ), m_pFileName( NULL ), m_pData( NULL ), m_nLength( 0 ) { }
 	~CMemoryFileBacking() { free( (char*) m_pFileName ); if ( m_pData ) m_pFS->FreeOptimalReadBuffer( (char*) m_pData ); }
+#include <memdbgoff.h>
 
 	IFileSystem* m_pFS;
 	int m_nRegistered;

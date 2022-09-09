@@ -18,11 +18,11 @@
 #define GAMMA 2.2f
 #define TEXGAMMA 2.2f
 
-#include "tier1/interface.h"
-#include "tier1/refcount.h"
 #include "mathlib/vector.h"
 #include "mathlib/vector4d.h"
 #include "mathlib/vmatrix.h"
+#include "tier1/interface.h"
+#include "tier1/refcount.h"
 #include "appframework/IAppSystem.h"
 #include "bitmap/imageformat.h"
 #include "texture_group_names.h"
@@ -66,7 +66,11 @@ typedef uint64 VertexFormat_t;
 
 // NOTE NOTE NOTE!!!!  If you up this, grep for "NEW_INTERFACE" to see if there is anything
 // waiting to be enabled during an interface revision.
-#define MATERIAL_SYSTEM_INTERFACE_VERSION "VMaterialSystem080"
+
+// V081 - 10/25/2016 - Added new Suspend/Resume texture streaming interfaces. Might also have added more calls here due
+//                     to the streaming work that didn't get bumped, but we're not guarding versions on the TF branch
+//                     very judiciously since we need to audit them when merging to SDK branch either way.
+#define MATERIAL_SYSTEM_INTERFACE_VERSION "VMaterialSystem081"
 
 #ifdef POSIX
 #define ABSOLUTE_MINIMUM_DXLEVEL 90
@@ -423,8 +427,8 @@ struct FlashlightState_t
 	{
 		m_bEnableShadows = false;						// Provide reasonable defaults for shadow depth mapping parameters
 		m_bDrawShadowFrustum = false;
-		m_flShadowMapResolution = 2048.0f;
-		m_flShadowFilterSize = 0.1f;
+		m_flShadowMapResolution = 1024.0f;
+		m_flShadowFilterSize = 3.0f;
 		m_flShadowSlopeScaleDepthBias = 16.0f;
 		m_flShadowDepthBias = 0.0005f;
 		m_flShadowJitterSeed = 0.0f;
@@ -537,8 +541,8 @@ enum RenderTargetSizeMode_t
 	RT_SIZE_DEFAULT=1,				// Don't play with the specified width and height other than making sure it fits in the framebuffer.
 	RT_SIZE_PICMIP=2,				// Apply picmip to the render target's width and height.
 	RT_SIZE_HDR=3,					// frame_buffer_width / 4
-	RT_SIZE_FULL_FRAME_BUFFER=6,	// Same size as frame buffer, or next lower power of 2 if we can't do that.
-	RT_SIZE_OFFSCREEN=10,			// Target of specified size, don't mess with dimensions
+	RT_SIZE_FULL_FRAME_BUFFER=4,	// Same size as frame buffer, or next lower power of 2 if we can't do that.
+	RT_SIZE_OFFSCREEN=5,			// Target of specified size, don't mess with dimensions
 	RT_SIZE_FULL_FRAME_BUFFER_ROUNDED_UP=6, // Same size as the frame buffer, rounded up if necessary for systems that can't do non-power of two textures.
 	RT_SIZE_REPLAY_SCREENSHOT = 7,	// Rounded down to power of 2, essentially...
 	RT_SIZE_LITERAL = 8,			// Use the size passed in. Don't clamp it to the frame buffer size. Really.
@@ -801,6 +805,11 @@ public:
 	//---------------------------------------------------------
 	// Material and texture management
 	//---------------------------------------------------------
+
+	// Stop attempting to stream in textures in response to usage.  Useful for phases such as loading or other explicit
+	// operations that shouldn't take usage of textures as a signal to stream them in at full rez.
+	virtual void				SuspendTextureStreaming( ) = 0;
+	virtual void				ResumeTextureStreaming( ) = 0;
 
 	// uncache all materials. .  good for forcing reload of materials.
 	virtual void				UncacheAllMaterials( ) = 0;
@@ -1078,6 +1087,12 @@ public:
 	// creates a texture suitable for use with materials from a raw stream of bits.
 	// The bits will be retained by the material system and can be freed upon return.
 	virtual ITexture*			CreateNamedTextureFromBitsEx( const char* pName, const char *pTextureGroupName, int w, int h, int mips, ImageFormat fmt, int srcBufferSize, byte* srcBits, int nFlags ) = 0;
+
+	// Creates a texture compositor template for use in later code. 
+	virtual bool				AddTextureCompositorTemplate( const char* pName, KeyValues* pTmplDesc, int nTexCompositeTemplateFlags = 0 ) = 0;
+
+	// Performs final verification of all compositor templates (after they've all been initially loaded).
+	virtual bool				VerifyTextureCompositorTemplates( ) = 0;
 };
 
 
