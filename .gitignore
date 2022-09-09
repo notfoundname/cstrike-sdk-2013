@@ -10,14 +10,14 @@
 *.exp
 *.ilk
 *.lastbuildstate
-# vc100.pdb
-# vc120.pdb
-# *.pdb
-# Release*
-# Debug*
-# *.vcxproj.*
-# *.vpc.sentinel
-# ipch
+vc100.pdb
+vc120.pdb
+*.pdb
+Release*
+Debug*
+*.vcxproj.*
+*.vpc.sentinel
+ipch
 *.sdf
 *.opensdf
 *.idb
