@@ -18,8 +18,7 @@ $Group "game"
 {
 	"client"
 	"server"
-	//"game_shader_dx9"
-	"stdshader_dx9"
+	"game_shader_dx9"
 	"mathlib"
 	"raytrace"
 	"tier1"
@@ -28,16 +27,14 @@ $Group "game"
 
 $Group "shaders"
 {
-	//"game_shader_dx9"
-	"stdshader_dx9"
+	"game_shader_dx9"
 }
 
 $Group "everything"
 {
 	"client"
 	"server"
-	//"game_shader_dx9"
-	"stdshader_dx9"
+	"game_shader_dx9"
 	"captioncompiler"
 	"fgdlib"
 	"glview"

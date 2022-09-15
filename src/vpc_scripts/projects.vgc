@@ -13,6 +13,7 @@ $Project "captioncompiler"
 	"utils\captioncompiler\captioncompiler.vpc" [$WIN32]
 }
 
+
 $Project "client"
 {
 	"game\client\client_cstrike.vpc"		[($WIN32||$POSIX) && $CSTRIKE]
@@ -23,9 +24,9 @@ $Project "fgdlib"
 	"fgdlib\fgdlib.vpc" [$WIN32]
 }
 
-$Project "stdshader_dx9" //"game_shader_dx9"
+$Project "game_shader_dx9"
 {
-	"materialsystem\stdshaders\stdshader_dx9.vpc" // game_shader_dx9_cstrike.vpc" [$CSTRIKE]
+	"materialsystem\stdshaders\game_shader_dx9_cstrike.vpc" [$CSTRIKE]
 }
 
 $Project "glview"
@@ -127,3 +128,4 @@ $Project "vvis_launcher"
 {
 	"utils\vvis_launcher\vvis_launcher.vpc" [$WIN32]
 }
+
