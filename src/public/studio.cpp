@@ -565,7 +565,7 @@ int	studiohdr_t::GetActivityListVersion( void )
 	virtualmodel_t *pVModel = (virtualmodel_t *)GetVirtualModel();
 	Assert( pVModel );
 
-	int ActVersion = activitylistversion;
+	int version = activitylistversion;
 
 	int i;
 	for (i = 1; i < pVModel->m_group.Count(); i++)
@@ -575,15 +575,15 @@ int	studiohdr_t::GetActivityListVersion( void )
 
 		Assert( pStudioHdr );
 
-		ActVersion = min( ActVersion, pStudioHdr->activitylistversion );
+		version = min( version, pStudioHdr->activitylistversion );
 	}
 
-	return ActVersion;
+	return version;
 }
 
-void studiohdr_t::SetActivityListVersion( int ActVersion ) const
+void studiohdr_t::SetActivityListVersion( int version ) const
 {
-	activitylistversion = ActVersion;
+	activitylistversion = version;
 
 	if (numincludemodels == 0)
 	{
@@ -601,7 +601,7 @@ void studiohdr_t::SetActivityListVersion( int ActVersion ) const
 
 		Assert( pStudioHdr );
 
-		pStudioHdr->SetActivityListVersion( ActVersion );
+		pStudioHdr->SetActivityListVersion( version );
 	}
 }
 
@@ -1380,14 +1380,15 @@ int	CStudioHdr::RemapAnimBone( int iAnim, int iLocalBone ) const
 //-----------------------------------------------------------------------------
 void CStudioHdr::RunFlexRules( const float *src, float *dest )
 {
+	int i, j;
 
 	// FIXME: this shouldn't be needed, flex without rules should be stripped in studiomdl
-	for (int i = 0; i < numflexdesc(); i++)
+	for (i = 0; i < numflexdesc(); i++)
 	{
 		dest[i] = 0;
 	}
 
-	for (int i = 0; i < numflexrules(); i++)
+	for (i = 0; i < numflexrules(); i++)
 	{
 		float stack[32] = {};
 		int k = 0;
@@ -1406,7 +1407,7 @@ void CStudioHdr::RunFlexRules( const float *src, float *dest )
 //*/
 		// debugoverlay->AddTextOverlay( GetAbsOrigin() + Vector( 0, 0, 64 ), i + 1, 0, "%2d:%d\n", i, prule->flex );
 
-		for (int j = 0; j < prule->numops; j++)
+		for (j = 0; j < prule->numops; j++)
 		{
 			switch (pops->op)
 			{
@@ -1443,9 +1444,9 @@ void CStudioHdr::RunFlexRules( const float *src, float *dest )
 				{
 					int m = pops->d.index;
 					int km = k - m;
-					for ( int iStack = km + 1; iStack < k; ++iStack )
+					for ( int i = km + 1; i < k; ++i )
 					{
-						stack[ km ] *= stack[iStack];
+						stack[ km ] *= stack[ i ];
 					}
 					k = k - m + 1;
 				}
@@ -1455,9 +1456,9 @@ void CStudioHdr::RunFlexRules( const float *src, float *dest )
 					int m = pops->d.index;
 					int km = k - m;
 					float dv = stack[ km ];
-					for ( int iStack = km + 1; iStack < k; ++iStack )
+					for ( int i = km + 1; i < k; ++i )
 					{
-						dv *= stack[iStack];
+						dv *= stack[ i ];
 					}
 					stack[ km - 1 ] *= 1.0f - dv;
 					k -= m;

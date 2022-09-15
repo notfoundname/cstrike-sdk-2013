@@ -499,7 +499,7 @@ inline void CDispCollTree::LockCache()
 #ifdef ENGINE_DLL
 	if ( !g_DispCollTriCache.LockResource( m_hCache ) )
 	{
-		AUTO_LOCK( s_CacheMutex );
+		AUTO_LOCK_FM( s_CacheMutex );
 
 		// Cache may have just been created, so check once more
 		if ( !g_DispCollTriCache.LockResource( m_hCache ) )

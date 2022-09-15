@@ -19,7 +19,7 @@
 #include "filesystem.h"
 #include <vstdlib/IKeyValuesSystem.h>
 #include "tier0/icommandline.h"
-#include "tier0/vprof_telemetry.h"
+
 #include <Color.h>
 #include <stdlib.h>
 #include "tier0/dbg.h"
@@ -645,9 +645,6 @@ void KeyValues::UsesConditionals(bool state)
 //-----------------------------------------------------------------------------
 bool KeyValues::LoadFromFile( IBaseFileSystem *filesystem, const char *resourceName, const char *pathID, bool refreshCache )
 {
-	TM_ZONE_DEFAULT( TELEMETRY_LEVEL0 );
-	TM_ZONE_DEFAULT_PARAM( TELEMETRY_LEVEL0, resourceName );
-
 	Assert(filesystem);
 #ifdef WIN32
 	Assert( IsX360() || ( IsPC() && _heapchk() == _HEAPOK ) );
@@ -2991,58 +2988,23 @@ bool KeyValues::ProcessResolutionKeys( const char *pResString )
 //
 // KeyValues dumping implementation
 //
-bool KeyValues::Dump( IKeyValuesDumpContext *pDump, int nIndentLevel /* = 0 */,  bool bSorted /*= false*/ )
+bool KeyValues::Dump( IKeyValuesDumpContext *pDump, int nIndentLevel /* = 0 */ )
 {
 	if ( !pDump->KvBeginKey( this, nIndentLevel ) )
 		return false;
-
-	if ( bSorted )
-	{
-		CUtlSortVector< KeyValues*, CUtlSortVectorKeyValuesByName > vecSortedKeys;
 	
-		// Dump values
-		for ( KeyValues *val = this ? GetFirstValue() : NULL; val; val = val->GetNextValue() )
-		{
-			vecSortedKeys.InsertNoSort( val );
-		}
-		vecSortedKeys.RedoSort();
-
-		FOR_EACH_VEC( vecSortedKeys, i )
-		{
-			if ( !pDump->KvWriteValue( vecSortedKeys[i], nIndentLevel + 1 ) )
-				return false;
-		}
-		
-		vecSortedKeys.Purge();
-
-		// Dump subkeys
-		for ( KeyValues *sub = this ? GetFirstTrueSubKey() : NULL; sub; sub = sub->GetNextTrueSubKey() )
-		{
-			vecSortedKeys.InsertNoSort( sub );
-		}
-		vecSortedKeys.RedoSort();
-
-		FOR_EACH_VEC( vecSortedKeys, i )
-		{
-			if ( !vecSortedKeys[i]->Dump( pDump, nIndentLevel + 1, bSorted ) )
-				return false;
-		}
-	}
-	else
+	// Dump values
+	for ( KeyValues *val = this ? GetFirstValue() : NULL; val; val = val->GetNextValue() )
 	{
-		// Dump values
-		for ( KeyValues *val = this ? GetFirstValue() : NULL; val; val = val->GetNextValue() )
-		{
-			if ( !pDump->KvWriteValue( val, nIndentLevel + 1 ) )
-				return false;
-		}
+		if ( !pDump->KvWriteValue( val, nIndentLevel + 1 ) )
+			return false;
+	}
 
-		// Dump subkeys
-		for ( KeyValues *sub = this ? GetFirstTrueSubKey() : NULL; sub; sub = sub->GetNextTrueSubKey() )
-		{
-			if ( !sub->Dump( pDump, nIndentLevel + 1 ) )
-				return false;
-		}
+	// Dump subkeys
+	for ( KeyValues *sub = this ? GetFirstTrueSubKey() : NULL; sub; sub = sub->GetNextTrueSubKey() )
+	{
+		if ( !sub->Dump( pDump, nIndentLevel + 1 ) )
+			return false;
 	}
 
 	return pDump->KvEndKey( this, nIndentLevel );
@@ -3055,9 +3017,7 @@ bool IKeyValuesDumpContextAsText::KvBeginKey( KeyValues *pKey, int nIndentLevel 
 		return
 			KvWriteIndent( nIndentLevel ) &&
 			KvWriteText( pKey->GetName() ) &&
-			KvWriteText( "\n" ) &&
-			KvWriteIndent( nIndentLevel ) &&
-			KvWriteText( "{\n" );
+			KvWriteText( " {\n" );
 	}
 	else
 	{

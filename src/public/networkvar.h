@@ -744,9 +744,9 @@ private:
 		const type* Base() const { return m_Value; } \
 		int Count() const { return count; } \
 	protected: \
-		inline void NetworkStateChanged( int net_change_index ) \
+		inline void NetworkStateChanged( int index ) \
 		{ \
-			CHECK_USENETWORKVARS ((ThisClass*)(((char*)this) - MyOffsetOf(ThisClass,name)))->stateChangedFn( &m_Value[net_change_index] ); \
+			CHECK_USENETWORKVARS ((ThisClass*)(((char*)this) - MyOffsetOf(ThisClass,name)))->stateChangedFn( &m_Value[index] ); \
 		} \
 		type m_Value[count]; \
 	}; \

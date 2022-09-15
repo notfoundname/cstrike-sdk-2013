@@ -1065,18 +1065,14 @@ inline int CFixedBitVecBase<NUM_BITS>::FindNextSetBit( int startBit ) const
 			const uint32 * RESTRICT pCurElem = Base() + wordIndex;
 			unsigned int elem = *pCurElem;
 			elem &= startMask;
-			while ( wordIndex < NUM_INTS )
+			do 
 			{
 				if ( elem )
-				{
 					return FirstBitInWord(elem, wordIndex << 5);
-				}
-				else if ( ++wordIndex < NUM_INTS )
-				{
-					++pCurElem;
-					elem = *pCurElem;
-				}
-			}
+				++pCurElem;
+				elem = *pCurElem;
+				++wordIndex;
+			} while( wordIndex <= NUM_INTS-1);
 		}
 
 	}

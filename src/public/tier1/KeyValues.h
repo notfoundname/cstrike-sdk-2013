@@ -256,12 +256,10 @@ public:
 	bool ProcessResolutionKeys( const char *pResString );
 
 	// Dump keyvalues recursively into a dump context
-	bool Dump( class IKeyValuesDumpContext *pDump, int nIndentLevel = 0, bool bSorted = false );
+	bool Dump( class IKeyValuesDumpContext *pDump, int nIndentLevel = 0 );
 		
 	// Merge in another KeyValues, keeping "our" settings
 	void RecursiveMergeKeyValues( KeyValues *baseKV );
-
-	void AddSubkeyUsingKnownLastChild( KeyValues *pSubKey, KeyValues *pLastChild );
 
 private:
 	KeyValues( KeyValues& );	// prevent copy constructor being used
@@ -276,6 +274,7 @@ private:
 	/// when CreateKey() wil have to re-locate the end of the list each time.  This happens,
 	/// for example, every time we load any KV file whatsoever.
 	KeyValues* CreateKeyUsingKnownLastChild( const char *keyName, KeyValues *pLastChild );
+	void AddSubkeyUsingKnownLastChild( KeyValues *pSubKey, KeyValues *pLastChild );
 
 	void CopyKeyValuesFromRecursive( const KeyValues& src );
 	void CopyKeyValue( const KeyValues& src, size_t tmpBufferSizeB, char* tmpBuffer );

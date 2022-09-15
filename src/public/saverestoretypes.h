@@ -63,6 +63,9 @@ public:
 	const char *StringFromSymbol( int token );
 
 private:
+#ifndef _WIN32
+	unsigned _rotr ( unsigned val, int shift);
+#endif
 	unsigned int HashString( const char *pszToken );
 	
 	//---------------------------------
@@ -247,14 +250,14 @@ public:
 			else
 			{
 				int i;
-				entitytable_t *pEntTable;
+				entitytable_t *pTable;
 
 				int nEntities = NumEntities();
 				for ( i = 0; i < nEntities; i++ )
 				{
-					pEntTable = GetEntityInfo( i );
-					if ( pEntTable->hEnt == pEntity )
-						return pEntTable->id;
+					pTable = GetEntityInfo( i );
+					if ( pTable->hEnt == pEntity )
+						return pTable->id;
 				}
 			}
 		}
@@ -508,26 +511,29 @@ inline const char *CSaveRestoreSegment::StringFromSymbol( int token )
 	return "<<illegal>>";
 }
 
-/// XXX(JohnS): I'm not sure using an intrinsic has any value here, just doing the shift should be recognized by most
-///             compilers. Either way, there's no portable intrinsic.
+#ifndef _WIN32
+inline unsigned CSaveRestoreSegment::_rotr ( unsigned val, int shift)
+{
+		unsigned lobit;        /* non-zero means lo bit set */
+		unsigned num = val;    /* number to rotate */
 
-// Newer GCC versions provide this in this header, older did by default.
-#if !defined( _rotr ) && defined( COMPILER_GCC )
-#include <x86intrin.h>
-#endif
+		shift &= 0x1f;                  /* modulo 32 -- this will also make
+										   negative shifts work */
 
-#ifdef COMPILER_CLANG
-static __inline__ unsigned int __attribute__((__always_inline__, __nodebug__))
-_rotr(unsigned int _Value, int _Shift) {
-	_Shift &= 0x1f;
-	return _Shift ? (_Value >> _Shift) | (_Value << (32 - _Shift)) : _Value;
+		while (shift--) 
+		{
+				lobit = num & 1;        /* get high bit */
+				num >>= 1;              /* shift right one bit */
+				if (lobit)
+						num |= 0x80000000;  /* set hi bit if lo bit was set */
+		}
+
+		return num;
 }
 #endif
 
-
 inline unsigned int CSaveRestoreSegment::HashString( const char *pszToken )
 {
-	COMPILE_TIME_ASSERT( sizeof( unsigned int ) == 4 );
 	unsigned int	hash = 0;
 
 	while ( *pszToken )

@@ -13,6 +13,10 @@
 #endif
 
 #include <stddef.h>
+#ifdef LINUX
+#undef offsetof
+#define offsetof(s,m)	(size_t)&(((s *)0)->m)
+#endif
 
 #include "tier0/platform.h"
 
@@ -37,7 +41,6 @@
 //-----------------------------------------------------------------------------
 MEM_INTERFACE void *MemAllocScratch( int nMemSize );
 MEM_INTERFACE void MemFreeScratch();
-MEM_INTERFACE void MemAllocOOMError( size_t nSize );
 
 #ifdef _LINUX
 MEM_INTERFACE void ZeroMemory( void *mem, size_t length );

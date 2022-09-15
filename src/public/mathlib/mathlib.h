@@ -8,7 +8,6 @@
 #define MATH_LIB_H
 
 #include <math.h>
-#include "minmax.h"
 #include "tier0/basetypes.h"
 #include "tier0/commonmacros.h"
 #include "mathlib/vector.h"
