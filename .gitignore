@@ -50,10 +50,8 @@ game_shader_dx9.pdb
 game_shader_dx9.dll
 game_shader_dx9.lib
 *.pdb
-Release*
-Debug*
-*.vcxproj.*
-*.vpc.sentinel
+Release_*
+Debug_*
 
 game/bin/*
 
