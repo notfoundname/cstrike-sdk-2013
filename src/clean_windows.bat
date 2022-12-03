@@ -5,4 +5,8 @@ del /S *.sln
 del /S *.sdf
 del /S *.suo
 del /S *.bak
+del /S *.obj
+del /S *.log
+del /S *.tlog
+del /S *.lastbuildstate
 pause
