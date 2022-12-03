@@ -34,19 +34,9 @@ extern ConVar in_forceuser;
 #define SCREEN_OVERLAY_MATERIAL "vgui/screens/vgui_overlay"
 
 #if defined( CLIENT_DLL )
-// This will not affect weapon_c4 and weapon_knife
 ConVar viewmodel_offset_x("viewmodel_offset_x", "0.0", FCVAR_CLIENTDLL); // the viewmodel offset from default in X
 ConVar viewmodel_offset_y("viewmodel_offset_y", "0.0", FCVAR_CLIENTDLL); // the viewmodel offset from default in Y
 ConVar viewmodel_offset_z("viewmodel_offset_z", "0.0", FCVAR_CLIENTDLL); // the viewmodel offset from default in Z
-
-ConVar viewmodel_size("viewmodel_size", "74", FCVAR_CLIENTDLL);
-
-// So... Some weapon models are broken and their X is reversed. If you use properly made models, disable this.
-// Which weapons are affected:
-// - weapon_famas
-// - weapon_m249
-// - weapon_galil
-ConVar viewmodel_offset_fix("viewmodel_offset_fix", "1", FCVAR_CLIENTDLL);
 #endif
 
 //-----------------------------------------------------------------------------
@@ -412,6 +402,7 @@ void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePos
     AngleVectors(vmangoriginal, &vecForward, &vecRight, &vecUp);
 
 	CBaseCombatWeapon *pWeapon = m_hWeapon.Get();
+
 	//Allow weapon lagging
 	if ( pWeapon != NULL )
 	{
@@ -447,12 +438,7 @@ void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePos
 		g_ClientVirtualReality.OverrideViewModelTransform( vmorigin, vmangles, pWeapon && pWeapon->ShouldUseLargeViewModelVROverride() );
 	}
 
-    if (viewmodel_offset_fix.GetBool()) {
-        vmorigin += (viewmodel_offset_y.GetFloat() * vecForward) + (viewmodel_offset_z.GetFloat() * vecUp) + (viewmodel_offset_x.GetFloat() * vecRight * -1.0f);
-    }
-    else {
-        vmorigin += (viewmodel_offset_y.GetFloat() * vecForward) + (viewmodel_offset_z.GetFloat() * vecUp) + (viewmodel_offset_x.GetFloat() * vecRight);
-    }
+    vmorigin += (viewmodel_offset_y.GetFloat() * vecForward) + (viewmodel_offset_z.GetFloat() * vecUp) + (viewmodel_offset_x.GetFloat() * vecRight);
 
 	SetLocalOrigin( vmorigin );
 	SetLocalAngles( vmangles );
