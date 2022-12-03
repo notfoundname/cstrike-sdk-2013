@@ -81,7 +81,7 @@ ConVar hud_takesshots( "hud_takesshots", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "
 ConVar hud_freezecamhide( "hud_freezecamhide", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Hide the HUD during freeze-cam" );
 ConVar cl_show_num_particle_systems( "cl_show_num_particle_systems", "0", FCVAR_CLIENTDLL, "Display the number of active particle systems." );
 
-extern ConVar v_viewmodel_fov;
+ConVar v_viewmodel_fov("viewmodel_fov", "54.0", FCVAR_CLIENTDLL, "Sets the field-of-view for the viewmodel.", true, 0.1, true, 179.9);
 extern ConVar voice_modenable;
 
 extern bool IsInCommentaryMode( void );

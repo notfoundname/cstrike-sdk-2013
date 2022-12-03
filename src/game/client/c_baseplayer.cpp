@@ -469,8 +469,8 @@ void C_BasePlayer::Spawn( void )
 	ClearFlags();
 	AddFlag( FL_CLIENT );
 
-	int effects = GetEffects() & EF_NOSHADOW;
-	SetEffects( effects );
+	//int effects = GetEffects() & EF_NOSHADOW;
+	SetEffects( 0 );
 
 	m_iFOV	= 0;	// init field of view.
 

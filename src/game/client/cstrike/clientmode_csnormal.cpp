@@ -67,6 +67,7 @@ void __MsgFunc_MatchEndConditions( bf_read &msg );
 class CHudChat;
 
 ConVar default_fov( "default_fov", "90", FCVAR_CHEAT );
+extern ConVar v_viewmodel_fov;
 
 IClientMode *g_pClientMode = NULL;
 
@@ -439,7 +440,7 @@ ClientModeCSNormal* GetClientModeCSNormal()
 
 float ClientModeCSNormal::GetViewModelFOV( void )
 {
-	return 74.0f;
+    return v_viewmodel_fov.GetFloat();
 }
 
 int ClientModeCSNormal::GetDeathMessageStartHeight( void )
