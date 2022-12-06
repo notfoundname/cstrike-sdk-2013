@@ -31,8 +31,19 @@
 #define XAPOBASE_DEFAULT_BUFFER_COUNT 1
 
 
+//--------------<M-A-C-R-O-S>-----------------------------------------------//
+// assertion
+#if !defined(XAPOASSERT)
+    #if XAPODEBUG
+        #define XAPOASSERT(exp) if (!(exp)) { OutputDebugStringA("XAPO ASSERT: " #exp ", {" __FUNCTION__ "}\n"); __debugbreak(); }
+    #else
+        #define XAPOASSERT(exp) __assume(exp)
+    #endif
+#endif
+
+
 //--------------<D-A-T-A---T-Y-P-E-S>---------------------------------------//
-#pragma pack(push, 1) // set packing alignment to ensure consistency across arbitrary build environments
+#pragma pack(push, 8) // set packing alignment to ensure consistency across arbitrary build environments, and ensure synchronization variables used by Interlocked functionality are correctly aligned
 
 
 // primitive types
@@ -52,12 +63,11 @@ private:
     FLOAT32* m_pfl32MatrixCoefficients; // matrix coefficient table, used for thru processing
     UINT32   m_nSrcFormatType;          // input format type, used for thru processing
     BOOL     m_fIsScalarMatrix;         // TRUE if m_pfl32MatrixCoefficients is diagonal matrix with all main diagonal entries equal, i.e. m_pfnMatrixMixFunction only used for type conversion (no channel conversion), used for thru processing
-
-    BOOL m_fIsLocked; // TRUE if XAPO locked via CXAPOBase.LockForProcess
+    BOOL     m_fIsLocked;               // TRUE if XAPO locked via CXAPOBase.LockForProcess
 
 
 protected:
-    __declspec(align(4)) LONG m_lReferenceCount; // COM reference count
+    LONG m_lReferenceCount; // COM reference count, must be aligned for atomic operations
 
       ////
       // DESCRIPTION:
@@ -145,8 +155,9 @@ public:
 
     // IUnknown methods:
     // retrieves the requested interface pointer if supported
-    STDMETHOD(QueryInterface) (REFIID riid, __deref_out void** ppInterface)
+    STDMETHOD(QueryInterface) (REFIID riid, __deref_out_opt void** ppInterface)
     {
+        XAPOASSERT(ppInterface != NULL);
         HRESULT hr = S_OK;
 
         if (riid == __uuidof(IXAPO)) {
@@ -197,7 +208,11 @@ public:
 
     // Performs any effect-specific initialization.
     // This default implementation is a no-op and only returns S_OK.
-    STDMETHOD(Initialize) (const void*, UINT32) { return S_OK; }
+    STDMETHOD(Initialize) (__in_bcount_opt(DataByteSize) const void*, UINT32 DataByteSize)
+    {
+        UNREFERENCED_PARAMETER(DataByteSize);
+        return S_OK;
+    }
 
     // Resets variables dependent on frame history.
     // This default implementation is a no-op: this base class contains no
@@ -235,18 +250,18 @@ public:
   //  protect variables shared between IXAPOParameters::GetParameters
   //  and IXAPOParameters::SetParameters/IXAPO::Process.
   //
-  //  This class is for parameter blocks whose size is larger than 8 bytes.
-  //  For smaller parameter blocks, use Interlocked operations directly
+  //  This class is for parameter blocks whose size is larger than 4 bytes.
+  //  For smaller parameter blocks, use atomic operations directly
   //  on the parameters for synchronization.
   ////
 class __declspec(novtable) CXAPOParametersBase: public CXAPOBase, public IXAPOParameters {
 private:
     BYTE*  m_pParameterBlocks;           // three contiguous process parameter blocks used for synchronization, user responsible for initialization of parameter blocks before IXAPO::Process/SetParameters/GetParameters called
-    BYTE*  m_pCurrentParameters;         // pointer to current process parameters
+    BYTE*  m_pCurrentParameters;         // pointer to current process parameters, must be aligned for atomic operations
     BYTE*  m_pCurrentParametersInternal; // pointer to current process parameters (temp pointer read by SetParameters/BeginProcess/EndProcess)
     UINT32 m_uCurrentParametersIndex;    // index of current process parameters
-    UINT32 m_uParameterBlockByteSize;    // size of a single parameter block in bytes
-    LONG   m_nNewerResultsReady;         // non-zero if there exists new processing results, not yet picked up by GetParameters()
+    UINT32 m_uParameterBlockByteSize;    // size of a single parameter block in bytes, must be > 0
+    BOOL   m_fNewerResultsReady;         // TRUE if there exists new processing results not yet picked up by GetParameters(), must be aligned for atomic operations
     BOOL   m_fProducer;                  // IXAPO::Process produces data to be returned by GetParameters(); SetParameters() disallowed
 
 
@@ -255,16 +270,17 @@ public:
     // PARAMETERS:
     //  pRegistrationProperties - [in] registration properties of the XAPO
     //  pParameterBlocks        - [in] three contiguous process parameter blocks used for synchronization
-    //  uParameterBlockByteSize - [in] size of one of the parameter blocks
-    //  fProducer               - [in] TRUE if IXAPO::Process produces data to be returned by GetParameters() (SetParameters() disallowed)
+    //  uParameterBlockByteSize - [in] size of one of the parameter blocks, must be > 0
+    //  fProducer               - [in] TRUE if IXAPO::Process produces data to be returned by GetParameters() (SetParameters() and ParametersChanged() disallowed)
     ////
     CXAPOParametersBase (const XAPO_REGISTRATION_PROPERTIES* pRegistrationProperties, BYTE* pParameterBlocks, UINT32 uParameterBlockByteSize, BOOL fProducer);
     virtual ~CXAPOParametersBase ();
 
     // IUnknown methods:
     // retrieves the requested interface pointer if supported
-    STDMETHOD(QueryInterface) (REFIID riid, __deref_out void** ppInterface)
+    STDMETHOD(QueryInterface) (REFIID riid, __deref_out_opt void** ppInterface)
     {
+        XAPOASSERT(ppInterface != NULL);
         HRESULT hr = S_OK;
 
         if (riid == __uuidof(IXAPOParameters)) {
