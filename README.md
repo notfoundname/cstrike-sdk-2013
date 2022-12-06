@@ -1,11 +1,17 @@
 # cstrike-sdk-2013
 Counter-Strike: Source SDK based on leak(s) from 2018-2020 and original 2013 SDK.
 
+Implemented:
+- implemented some fixes and features from VDC (per-entiry dynamic shadow angles, Discord RPC, better env_projectedtexture behaviour, general snippets);
+- added viewmodel_offset_x/y/z and removed cheat protection from viewmodel_fov.
+
 TODO:
 - [ ] Rename to mod_cstrike without causing any problems;
 - [ ] Make custom shaders work (not possible right now, materialsystem blocks custom shader dll loading for valve games, like cstrike, dod, tf2 ect);
 - [ ] Fix rare crashes;
 - [ ] Fix teammenu command not working;
+- [ ] Fix viewmodels for weapon_famas, weapon_galil and weapon_m249 (they are X reverted, viewmodel_offset_x will make them move to the right, not left);
+- [ ] Attach flashlight to viewmodel;
 - [ ] Implement client-side global light.
 
 Used code from:
