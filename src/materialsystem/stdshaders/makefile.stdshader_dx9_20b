@@ -1,0 +1,18 @@
+default:  fxctmp9_tmp\my_pixelshader_ps20.inc shaders\fxc\my_pixelshader_ps20.vcs fxctmp9_tmp\my_pixelshader_ps20b.inc shaders\fxc\my_pixelshader_ps20b.vcs
+
+fxctmp9_tmp\my_pixelshader_ps20.inc shaders\fxc\my_pixelshader_ps20.vcs: my_pixelshader_ps2x.fxc common_pragmas.h common_hlsl_cpp_consts.h common_ps_fxc.h common_fxc.h
+	perl ..\..\devtools\bin\fxc_prep.pl   -source "..\.." my_pixelshader_ps2x.fxc-----my_pixelshader_ps20
+	echo my_pixelshader_ps2x.fxc>> filestocopy.txt
+	echo common_pragmas.h>> filestocopy.txt
+	echo common_hlsl_cpp_consts.h>> filestocopy.txt
+	echo common_ps_fxc.h>> filestocopy.txt
+	echo common_fxc.h>> filestocopy.txt
+
+fxctmp9_tmp\my_pixelshader_ps20b.inc shaders\fxc\my_pixelshader_ps20b.vcs: my_pixelshader_ps2x.fxc common_pragmas.h common_hlsl_cpp_consts.h common_ps_fxc.h common_fxc.h
+	perl ..\..\devtools\bin\fxc_prep.pl   -source "..\.." my_pixelshader_ps2x.fxc-----my_pixelshader_ps20b
+	echo my_pixelshader_ps2x.fxc>> filestocopy.txt
+	echo common_pragmas.h>> filestocopy.txt
+	echo common_hlsl_cpp_consts.h>> filestocopy.txt
+	echo common_ps_fxc.h>> filestocopy.txt
+	echo common_fxc.h>> filestocopy.txt
+

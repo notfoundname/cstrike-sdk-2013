@@ -3,9 +3,10 @@ Counter-Strike: Source SDK based on leak(s) from 2018-2020 and original 2013 SDK
 
 TODO:
 - [ ] Rename to mod_cstrike without causing any problems;
-- [ ] Make custom shaders work;
+- [ ] Make custom shaders work (not possible right now, materialsystem blocks custom shader dll loading for valve games, like cstrike, dod, tf2 ect);
 - [ ] Fix rare crashes;
-- [ ] Client-side global light.
+- [ ] Fix teammenu command not working;
+- [ ] Implement client-side global light.
 
 Used code from:
 - https://developer.valvesoftware.com/wiki/Env_projectedtexture/fixes

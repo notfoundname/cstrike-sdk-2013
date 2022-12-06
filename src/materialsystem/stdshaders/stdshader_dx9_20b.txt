@@ -6,3 +6,4 @@
 //	    _ps20b.vcs
 //	    _vs20.vcs
 //
+my_pixelshader_ps2x.fxc

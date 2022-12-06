@@ -11,4 +11,8 @@ $Include "$SRCDIR\materialsystem\stdshaders\game_shader_dx9_base.vpc"
 
 $Project "Shaders (CStrike)"
 {
+	$Folder	"Source Files"
+	{
+		$File	"MyShader.cpp"
+	}
 }

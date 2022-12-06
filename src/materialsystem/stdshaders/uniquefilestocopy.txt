@@ -1,0 +1,6 @@
+..\..\devtools\bin\d3dx9_33.dll 
+..\..\dx10sdk\utilities\dx9_30\dx_proxy.dll 
+C:\Games\srcsdk2013mp\bin\shadercompile.exe 
+C:\Games\srcsdk2013mp\bin\shadercompile_dll.dll 
+C:\Games\srcsdk2013mp\bin\tier0.dll 
+C:\Games\srcsdk2013mp\bin\vstdlib.dll 
