@@ -83,6 +83,11 @@ $Project "shaderlib"
 	"materialsystem\shaderlib\shaderlib.vpc" [$WINDOWS||$X360||$POSIX]
 }
 
+$Project "stdshader_dx9"
+{
+	"materialsystem\stdshaders\stdshader_dx9.vpc" [$WINDOWS||$X360||$POSIX]
+}
+
 $Project "tgadiff"
 {
 	"utils\tgadiff\tgadiff.vpc" [$WIN32]

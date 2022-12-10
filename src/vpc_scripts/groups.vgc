@@ -8,12 +8,6 @@
 // Group definitions //
 ///////////////////////
 
-$Group "gamedlls"
-{
-	"client"
-	"server"
-}
-
 $Group "game"
 {
 	"client"
@@ -23,17 +17,13 @@ $Group "game"
 	"particles"
 	"raytrace"
 	"shaderlib"
+	"stdshader_dx9"
 	"tier0"
 	"tier1"
 	"tier2"
 	"vgui_controls"
 	"vstdlib"
 	"vtf"
-}
-
-$Group "shaders"
-{
-	//"game_shader_dx9"
 }
 
 $Group "everything"
@@ -51,6 +41,7 @@ $Group "everything"
 	"raytrace"
 	"serverplugin_empty"
 	"shaderlib"
+	"stdshader_dx9"
 	"tgadiff"
 	"tier0"
 	"tier1"
@@ -76,4 +67,3 @@ $Group "dedicated"
 	"mathlib"
 	"tier1"
 }
-
