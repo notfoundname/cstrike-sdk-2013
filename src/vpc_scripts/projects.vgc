@@ -13,7 +13,6 @@ $Project "captioncompiler"
 	"utils\captioncompiler\captioncompiler.vpc" [$WIN32]
 }
 
-
 $Project "client"
 {
 	"game\client\client_cstrike.vpc"		[($WIN32||$POSIX) && $CSTRIKE]
@@ -54,6 +53,11 @@ $Project "motionmapper"
 	"utils\motionmapper\motionmapper.vpc" [$WIN32]
 }
 
+$Project "particles"
+{
+	"particles\particles.vpc"
+}
+
 //$Project "phonemeextractor"
 //{
 //	"utils\phonemeextractor\phonemeextractor.vpc" [$WIN32]
@@ -79,9 +83,19 @@ $Project "tgadiff"
 	"utils\tgadiff\tgadiff.vpc" [$WIN32]
 }
 
+$Project "tier0"
+{
+	"tier0\tier0.vpc" 	[$WINDOWS || $X360||$POSIX]
+}
+
 $Project "tier1"
 {
 	"tier1\tier1.vpc" 	[$WINDOWS || $X360||$POSIX]
+}
+
+$Project "tier2"
+{
+	"tier2\tier2.vpc" 	[$WINDOWS || $X360||$POSIX]
 }
 
 $Project "vbsp"
@@ -107,6 +121,16 @@ $Project "vrad_dll"
 $Project "vrad_launcher"
 {
 	"utils\vrad_launcher\vrad_launcher.vpc" [$WIN32]
+}
+
+$Project "vstdlib"
+{
+	"vstdlib\vstdlib.vpc"		[$WINDOWS || $X360||$POSIX]
+}
+
+$Project "vtf"
+{
+	"vtf\vtf.vpc" [$WINDOWS||$X360||$POSIX]
 }
 
 $Project "vtf2tga"
