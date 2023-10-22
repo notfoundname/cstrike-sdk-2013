@@ -6,7 +6,6 @@ Implemented:
 - added viewmodel_offset_x/y/z and removed cheat protection from viewmodel_fov.
 
 TODO:
-- [ ] Rename to mod_cstrike without causing any problems;
 - [ ] Make custom shaders work (not possible right now, materialsystem blocks custom shader dll loading for valve games, like cstrike, dod, tf2 ect);
 - [ ] Fix rare crashes;
 - [ ] Fix teammenu command not working;
@@ -31,7 +30,7 @@ THIS DOCUMENT DESCRIBES A CONTRACT BETWEEN YOU AND VALVE
 CORPORATION ("Valve").  PLEASE READ IT BEFORE DOWNLOADING OR USING 
 THE SOURCE ENGINE SDK ("SDK"). BY DOWNLOADING AND/OR USING THE 
 SOURCE ENGINE SDK YOU ACCEPT THIS LICENSE. IF YOU DO NOT AGREE TO 
-THE TERMS OF THIS LICENSE PLEASE DON’T DOWNLOAD OR USE THE SDK.  
+THE TERMS OF THIS LICENSE PLEASE DONâ€™T DOWNLOAD OR USE THE SDK.  
 
   You may, free of charge, download and use the SDK to develop a modified Valve game 
 running on the Source engine.  You may distribute your modified Valve game in source and 
